@@ -19,14 +19,30 @@ export default function Header() {
   //          state: 로그인 상태          //
   const [isLogin, setLogin] = useState<boolean>(false);
 
-  const isAuthPage = pathname.startsWith(AUTH_PATH());
-  const isMainPage = pathname === MAIN_PATH();
-  const isSearchPage = pathname.startsWith(SEARCH_PATH(''));
-  const isBoardDetailPage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_DETAIL_PATH(''));
-  const isBoardWritePage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_WRITE_PATH());
-  const isBoardUpdatePage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_UPDATE_PATH(''));
-  const isUserPage = pathname.startsWith(USER_PATH(''));
+  // 이것만 선언 되어 있어도 아래에 7개 state와 <effect: path가 변경될 때 마다 실행될 함수> 없어도 됨.
+  // const isAuthPage = pathname.startsWith(AUTH_PATH());
+  // const isMainPage = pathname === MAIN_PATH();
+  // const isSearchPage = pathname.startsWith(SEARCH_PATH(''));
+  // const isBoardDetailPage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_DETAIL_PATH(''));
+  // const isBoardWritePage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_WRITE_PATH());
+  // const isBoardUpdatePage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_UPDATE_PATH(''));
+  // const isUserPage = pathname.startsWith(USER_PATH(''));
 
+  // 이거 선언 안해도 되긴 함.
+  //          state: 인증 페이지 상태          //
+  const [isAuthPage, setAuthPage] = useState<boolean>(false);
+  //          state: 메인 페이지 상태          //
+  const [isMainPage, setMainPage] = useState<boolean>(false);
+  //          state: 검색 페이지 상태          //
+  const [isSearchPage, setSearchPage] = useState<boolean>(false);
+  //          state: 게시물 상세 페이지 상태          //
+  const [isBoardDetailPage, setBoardDetailPage] = useState<boolean>(false);
+  //          state: 게시물 작성 페이지 상태          //
+  const [isBoardWritePage, setBoardWritePage] = useState<boolean>(false);
+  //          state: 게시물 수정 페이지 상태          //
+  const [isBoardUpdatePage, setBoardUpdatePage] = useState<boolean>(false);
+  //          state: 유저 페이지 상태          //
+  const [isUserPage, setUserPage] = useState<boolean>(false);
 
   //          function:  네비게이트 함수          //
   const navigate = useNavigate();
@@ -106,14 +122,15 @@ export default function Header() {
       const{email} = loginUser;
       navigate(USER_PATH(email));
     }
-    //          event handler: 로그인 버튼 클릭 이벤트 처리 함수          //
-    const onSingInButtonClickHandler =()=>{
-      navigate(AUTH_PATH());
-    }
     //          event handler: 로그아웃 버튼 클릭 이벤트 처리 함수          //
     const onSignOutButtonClickHandler = () => {
       resetLoginUser();
+      setCookie('accessToken', '', { path: MAIN_PATH(), expires: new Date() });
       navigate(MAIN_PATH());
+    }
+    //          event handler: 로그인 버튼 클릭 이벤트 처리 함수          //
+    const onSingInButtonClickHandler =()=>{
+      navigate(AUTH_PATH());
     }
     //          render: 로그아웃 버튼 컴포넌트 렌더링        //
     if(isLogin && userEmail === loginUser?.email )
@@ -146,7 +163,28 @@ export default function Header() {
   }
 
 
+  //            effect: path가 변경될 때 마다 실행될 함수         // 여기에 없어도 되긴함.
+  useEffect(() => {
+    const isAuthPage = pathname.startsWith(AUTH_PATH());
+    setAuthPage(isAuthPage);
+    const isMainPage = pathname === MAIN_PATH();
+    setMainPage(isMainPage);
+    const isSearchPage = pathname.startsWith(SEARCH_PATH(''));
+    setSearchPage(isSearchPage);
+    const isBoardDetailPage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_DETAIL_PATH(''));
+    setBoardDetailPage(isBoardDetailPage);
+    const isBoardWritePage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_WRITE_PATH());
+    setBoardWritePage(isBoardWritePage);
+    const isBoardUpdatePage = pathname.startsWith(BOARD_PATH() + "/" + BOARD_UPDATE_PATH(''));
+    setBoardUpdatePage(isBoardUpdatePage);
+    const isUserPage = pathname.startsWith(USER_PATH(''));
+    setUserPage(isUserPage);
+  }, [pathname]);
 
+  //            effect: login user가 변경될 때 마다 실행될 함수         //
+  useEffect (() => {
+    setLogin(loginUser !== null);
+  }, [loginUser])
 
   //          render: 헤더 레이아웃 랜더링        //
   return (

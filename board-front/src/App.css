@@ -132,6 +132,8 @@
   background-image: url(assets/image/white-eye.png);
 }
 .expand-right-light-icon {
+  width: 16px;
+  height: 16px;
   background-image: url(assets/image/angle-right.png);
 }
 
@@ -153,4 +155,12 @@
 
 .search-light-icon{
   background-image: url(assets/image/white-search.png);
+}
+
+.white-checkbox-icon{
+  background-image: url(assets/image/white-checkbox.png);
+}
+
+.black-checkbox-icon{
+  background-image: url(assets/image/black-checkbox.png);
 }
